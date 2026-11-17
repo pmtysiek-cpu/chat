@@ -1,0 +1,18 @@
+{
+    "added": [
+        "tkchat_antispam_time",
+        "tkchat_chat_groups",
+        "tkchat_delete_groups",
+        "tkchat_edit_groups",
+        "tkchat_edit_own_groups",
+        "tkchat_edit_time_limit",
+        "tkchat_highlight_groups",
+        "tkchat_klipy_endpoint",
+        "tkchat_klipy_key",
+        "tkchat_max_message_length",
+        "tkchat_moderate_groups",
+        "tkchat_polling_interval"
+    ],
+    "edited": [],
+    "removed": []
+}

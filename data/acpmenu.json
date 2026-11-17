@@ -1,0 +1,11 @@
+{
+    "settings": {
+        "chat": {
+            "tab": "tkchat",
+            "controller": "chat",
+            "do": "",
+            "restriction": "chat_manage",
+            "subcontrollers": ""
+        }
+    }
+}

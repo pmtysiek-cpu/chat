@@ -1,0 +1,52 @@
+{
+    "normal": {
+        "added": [
+            "__app_tkchat",
+            "__app_tkchat_description",
+            "menu__tkchat_settings",
+            "menu__tkchat_settings_chat",
+            "perm__tkchat_use",
+            "perm__tkchat_moderate",
+            "perm__tkchat_edit",
+            "perm__tkchat_delete",
+            "tkchat_settings_title",
+            "tkchat_header_access",
+            "tkchat_access_info",
+            "tkchat_chat_groups",
+            "tkchat_header_moderation",
+            "tkchat_moderation_info",
+            "tkchat_moderate_groups",
+            "tkchat_edit_groups",
+            "tkchat_delete_groups",
+            "tkchat_header_own_messages",
+            "tkchat_own_messages_info",
+            "tkchat_edit_own_groups",
+            "tkchat_header_highlight",
+            "tkchat_highlight_info",
+            "tkchat_highlight_groups",
+            "tkchat_highlight_color",
+            "tkchat_header_general",
+            "tkchat_max_message_length",
+            "tkchat_antispam_time",
+            "tkchat_edit_time_limit",
+            "tkchat_polling_interval",
+            "tkchat_header_klipy",
+            "tkchat_klipy_endpoint",
+            "tkchat_klipy_key",
+            "tkchat_all_groups",
+            "tkchat_none",
+            "tkchat_seconds",
+            "tkchat_milliseconds",
+            "tkchat_no_limit",
+            "tkchat_beta",
+            "acplogs__tkchat_settings_updated"
+        ],
+        "edited": [],
+        "removed": []
+    },
+    "js": {
+        "added": [],
+        "edited": [],
+        "removed": []
+    }
+}

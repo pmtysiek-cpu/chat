@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme name="Default" author_name="Invision Power Services, Inc" author_url="https://www.invisioncommunity.com">
+ <template template_group="widget" template_name="chatContainer" template_data="" template_location="front" template_app="tkchat"><![CDATA[
+<div style="background: var(--theme-area_background_light, #f9f9f9); border: 1px solid var(--theme-area_background_dark, #ccc); padding: 15px; border-radius: var(--theme-radius_medium, 8px); max-width: 100%; font-family: var(--theme-font_family, sans-serif);">
+    <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--theme-text_color);">Czat Społeczności</h3>
+    
+    <div id="chatMessageWindow" style="height: 300px; overflow-y: auto; background: var(--theme-area_background_reset, #fff); border: 1px solid var(--theme-area_background_dark, #ddd); padding: 12px; margin-bottom: 12px; border-radius: var(--theme-radius_medium, 6px);">
+        <ul id="chatMessageList" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column;">
+            </ul>
+    </div>
+    
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="chatInputField" placeholder="Napisz coś na czacie..." style="flex-grow: 1; padding: 10px; border: 1px solid var(--theme-area_background_dark, #ccc); border-radius: var(--theme-radius_medium, 4px); height: 42px; box-sizing: border-box; background: var(--theme-area_background_reset); color: var(--theme-text_color);">
+        <button type="button" id="chatSendBtn" style="padding: 0 20px; background: var(--theme-primary, #007bff); color: #fff; border: none; border-radius: var(--theme-radius_medium, 4px); height: 42px; cursor: pointer; font-weight: bold;">Wyślij</button>
+    </div>
+</div>
+]]></template>
+ <template template_group="widget" template_name="ChatWidget" template_data="" template_location="front" template_app="tkchat"><![CDATA[
+<div style="background: var(--theme-area_background_light, #f9f9f9); border: 1px solid var(--theme-area_background_dark, #ccc); padding: 15px; border-radius: var(--theme-radius_medium, 8px); max-width: 100%; font-family: var(--theme-font_family, sans-serif);">
+    <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--theme-text_color);">Czat Społeczności</h3>
+    
+    <div id="chatMessageWindow" style="height: 300px; overflow-y: auto; background: var(--theme-area_background_reset, #fff); border: 1px solid var(--theme-area_background_dark, #ddd); padding: 12px; margin-bottom: 12px; border-radius: var(--theme-radius_medium, 6px);">
+        <ul id="chatMessageList" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column;">
+            </ul>
+    </div>
+    
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="chatInputField" placeholder="Napisz coś na czacie..." style="flex-grow: 1; padding: 10px; border: 1px solid var(--theme-area_background_dark, #ccc); border-radius: var(--theme-radius_medium, 4px); height: 42px; box-sizing: border-box; background: var(--theme-area_background_reset); color: var(--theme-text_color);">
+        <button type="button" id="chatSendBtn" style="padding: 0 20px; background: var(--theme-primary, #007bff); color: #fff; border: none; border-radius: var(--theme-radius_medium, 4px); height: 42px; cursor: pointer; font-weight: bold;">Wyślij</button>
+    </div>
+</div>
+]]></template>
+ <template template_group="widgets" template_name="ChatWidget" template_data="" template_location="front" template_app="tkchat"><![CDATA[
+{{if \IPS\Member::loggedIn()->member_id}}
+{{if \IPS\tkchat\ChatPermissions::canUseChat()}}
+<div id="tkChatContainer"
+     data-url="{url='app=tkchat&module=tkchat&controller=messages' front='true'}"
+     data-csrf="{expression='\IPS\Session::i()->csrfKey'}"
+     data-klipy-endpoint="{expression='\IPS\Settings::i()->tkchat_klipy_endpoint' ?: 'https://api.klipy.com/v2'}"
+     data-klipy-key=""
+     style="border-radius: 16px; max-width: 100%; position: relative;">
+<div id="chatSettingsPanel" style="display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center;">
+    <div id="chatSettingsOverlay" style="position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);"></div>
+    
+    <div style="position: relative; width: 650px; max-width: 95vw; max-height: 80vh; background: var(--i-dropdown--ba-co, #1c1c1e); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; display: flex; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: chatPanelIn 0.25s ease-out;">
+        {{$canModerate = \IPS\tkchat\ChatPermissions::canModerateChat( \IPS\Member::loggedIn() );}}
+        <div style="width: 200px; min-width: 200px; background: rgba(0,0,0,0.3); padding: 16px 0; border-right: 1px solid rgba(255,255,255,0.06);">
+
+            {{if \IPS\tkchat\ChatPermissions::canModerateChat( \IPS\Member::loggedIn() )}}
+        <div style="padding: 0 16px 12px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #888; font-weight: 600;">Moderacja</div>
+<a href="#" class="tk-panel-menu-item {{if $canModerate}}active{{endif}}" data-tab="ban" style="display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #ccc; font-size: 13px; text-decoration: none; transition: all 0.15s ease; border-left: 2px solid transparent;">
+    <i class="fa fa-ban" style="width: 16px; text-align: center;"></i> Banowanie
+</a>
+<a href="#" class="tk-panel-menu-item" data-tab="clear" style="display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #ccc; font-size: 13px; text-decoration: none; transition: all 0.15s ease; border-left: 2px solid transparent;">
+    <i class="fa fa-trash" style="width: 16px; text-align: center;"></i> Wyczyść czat
+</a>
+{{endif}}
+
+<div style="padding: 0 16px 12px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #888; font-weight: 600;">Ogólne</div>
+<a href="#" class="tk-panel-menu-item {{if !$canModerate}}active{{else}}ipsHide{{endif}}" data-tab="rules" style="display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #ccc; font-size: 13px; text-decoration: none; transition: all 0.15s ease; border-left: 2px solid transparent;">
+    <i class="fa fa-gavel" style="width: 16px; text-align: center;"></i> Regulamin
+</a>
+<a href="#" class="tk-panel-menu-item ipsHide" data-tab="notifysound" style="display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #ccc; font-size: 13px; text-decoration: none; transition: all 0.15s ease; border-left: 2px solid transparent;">
+    <i class="fa fa-bell" style="width: 16px; text-align: center;"></i> Powiadomienia dźwiękowe
+</a>
+        </div>
+        
+        <div style="flex: 1; padding: 20px; overflow-y: auto;">
+            
+            {{if $canModerate}}
+            <!-- Tab: Banowanie -->
+            <div class="tk-panel-tab" id="tab-ban">
+                <h4 style="margin: 0 0 16px 0; color: #fff; font-size: 16px; font-weight: 600;">Zbanuj użytkownika</h4>
+                
+                <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+<div style="position: relative; flex: 1;">
+    <input type="text" id="chatBanNickInput" class="ipsInput ipsInput--text" placeholder="Nazwa użytkownika..." autocomplete="off" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 14px;">
+  
+</div>
+                    <select id="chatBanDuration" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 13px; width: 130px;">
+                        <option value="0">Na zawsze</option>
+                        <option value="60">1 godzina</option>
+                        <option value="1440">24 godziny</option>
+                        <option value="10080">7 dni</option>
+                        <option value="43200">30 dni</option>
+                    </select>
+                    <button id="chatBanConfirmBtn" class="ipsButton ipsButton--primary" style="padding: 10px 20px; border-radius: 8px; white-space: nowrap;">Zbanuj</button>
+                </div>
+                <div id="chatBanResult" style="margin-bottom: 20px; font-size: 13px;"></div>
+                
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
+                    <h5 style="margin: 0 0 10px 0; color: #aaa; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Zbanowani użytkownicy</h5>
+                    <div id="chatBannedList" style="max-height: 250px; overflow-y: auto;">
+                        <span style="color: #666; font-size: 12px;">Ładowanie...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab: Wyczyść czat -->
+            <div class="tk-panel-tab ipsHide" id="tab-clear">
+                <h4 style="margin: 0 0 16px 0; color: #fff; font-size: 16px; font-weight: 600;">Wyczyść czat</h4>
+                <p style="color: #e74c3c; font-size: 13px; margin-bottom: 16px;">Ta operacja usunie wszystkie wiadomości z czatu.</p>
+                <button id="chatClearBtn" class="ipsButton ipsButton--danger" style="padding: 10px 20px; border-radius: 8px;">Usuń wszystkie wiadomości</button>
+            </div>
+            {{endif}}
+
+            <!-- Tab: Regulamin -->
+<div class="tk-panel-tab {{if $canModerate}}ipsHide{{endif}}" id="tab-rules">
+    <h4 style="margin: 0 0 16px 0; color: #fff; font-size: 16px; font-weight: 600;">Regulamin czatu</h4>
+    <div style="color: #bbb; font-size: 13px; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+        <ol class="tkchat-rules"><li><p>Nie obrażamy użytkowników.</p></li><li><p>Nie spamujemy wiadomościami.</p></li><li><p>Nie nadużywamy wulgaryzmów.</p></li><li><p>Nie reklamujemy innych for i podejrzanych stron.</p></li></ol>
+        <p>Pełny regulamin czatu znajdziesz tutaj:</p>
+        <a href="https://cs-maliver.pl/topic/173-regulamin-czatu/" target="_blank" rel="noopener" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background: var(--i-primary, #007bff); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 500; transition: opacity 0.2s ease;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+            <i class="fa fa-external-link" style="margin-right: 8px;"></i>Przejdź do regulaminu
+        </a>
+        <p style="margin-top: 16px; color: #888; font-style: italic;">Nieprzestrzeganie regulaminu może skutkować banem.</p>
+    </div>
+</div>
+
+ <!-- Tab: Powiadomienai dzwiekowe -->
+<div class="tk-panel-tab ipsHide" id="tab-notifysound">
+    <h4 style="margin: 0 0 16px 0; color: #fff; font-size: 16px; font-weight: 600;">Powiadomienia dźwiękowe</h4>
+    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #ccc; font-size: 13px;">
+        <input type="checkbox" id="chatSoundToggle" style="width: 16px; height: 16px; cursor: pointer;">
+        Dźwięk przy nowej wiadomości
+    </label>
+</div>
+
+        </div>
+    </div>
+</div>
+
+<h3 class="ipsWidget__header tkliveactivity-header">
+    Czat 
+    <span id="chatOnlineCount" class="tkchat--onlinecount">
+        <span class="tkliveactivity-dot"></span>
+        <span id="chatOnlineNum">0</span> online
+    </span>
+        <div class="tk-chat-settings">
+        <i class="fa fa-cog tk-chat-settings-btn"></i>
+    </div>
+</h3>
+   
+    <div id="chatMessageWindow" style="height: 380px; overflow-y: auto; border: 1px solid rgba(0,0,0,0.05); padding: 16px; border-radius: 12px; position: relative;">
+        <div id="initialLoader" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 5;">
+            <i class="fa fa-spinner fa-spin" style="font-size: 28px; color: var(--theme-primary, #7d7d7d);"></i>
+            <div style="font-size: 13px; margin-top: 10px; color: #777; font-weight: 500;">Ładowanie czatu...</div>
+        </div>
+
+        <div id="chatLoadMoreContainer" class="ipsHide" style="text-align: center; padding: 4px 0; margin-bottom: 16px;">
+            <button type="button" id="chatLoadMoreBtn" style="background: rgba(0,123,255,0.06); border: none; color: var(--theme-primary, #007bff); font-size: 12px; cursor: pointer; font-weight: 600; padding: 6px 16px; border-radius: 20px; transition: background 0.2s ease;">
+                <i class="fa fa-clock-o"></i> Załaduj starsze wiadomości
+            </button>
+        </div>
+
+        <ul id="chatMessageList" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column;"></ul>
+       
+        <div id="chatNewMessageAlert" class="ipsHide" style="position: sticky; bottom: 12px; left: 50%; transform: translateX(-50%); background: var(--theme-primary, #007bff); color: #fff; padding: 8px 20px; border-radius: 24px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,123,255,0.3); z-index: 10; width: max-content; transition: transform 0.2s ease;">
+            Nowe wiadomości <span id="unreadBadge" style="display: none; margin-left: 6px; background: #fff; color: var(--theme-primary, #007bff); padding: 2px 6px; border-radius: 10px; font-size: 11px;"></span> <i class="fa fa-arrow-down" style="margin-left: 4px;"></i>
+        </div>
+    </div>
+<div class="tkchat--others">
+    <div id="chatTypingIndicator" style="display: none;"></div>
+
+    <div id="chatGuestNotice" class="ipsHide" style="text-align: center; padding: 16px; background: #f8f9fa; border: 1px dashed rgba(0,0,0,0.12); border-radius: 12px; font-size: 14px; color: #555;">
+        <i class="fa fa-lock" style="margin-right: 8px; color: #888; font-size: 16px;"></i>
+        Aby pisać na czacie, musisz być <a href="{login_url}" style="color: var(--theme-primary, #007bff); font-weight: 600; text-decoration: none;">zalogowany</a>.
+    </div>
+
+    <div id="chatSendError" class="tk-send-error"></div>
+   
+    <!-- Blok podglądu odpowiedzi -->
+    <div id="chatReplyPreviewBar" class="ipsHide" style="display: none; justify-content: space-between; align-items: center; padding: 12px 16px 16px 16px; font-size: 13px; position: relative; z-index: 5; margin-bottom: -5px;">
+        <div style="display: flex; flex-direction: column; gap: 2px; overflow: hidden; width: 85%;">
+            <span style="font-size: 11px; font-weight: 700; color: #f1c40f; text-transform: uppercase; letter-spacing: 0.5px;">Odpowiedź na wiadomość</span>
+            <span id="chatReplyPreviewText" style="color: #cdcdcd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic;"></span>
+        </div>
+        <i id="chatCancelReplyBtn" class="fa fa-times" style="cursor: pointer; color: #e3e3e3; background: rgb(255 255 255 / 11%); padding: 6px; font-size: 12px; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 12px; transition: background 0.2s, color 0.2s;"></i>
+    </div>
+    <button id="chatReconnect" class="ipsHide" style="display: none; width: 100%; padding: 10px; background: rgba(255, 193, 7, 0.15); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 10px; color: #ffc107; font-size: 12px; cursor: pointer; margin-bottom: 8px; text-align: center;">
+    <i class="fa fa-refresh"></i> Połącz ponownie
+</button>
+</div>
+    <div id="chatInputArea" style="gap: 8px; position: relative; align-items: center;">
+        <div style="flex-grow: 1; position: relative;">
+            <ul id="chatMentionDropdown" class="tk-mention-dropdown ipsHide"></ul>
+            <input type="text" id="chatInputField" autocomplete="off" maxlength="500" placeholder="Napisz wiadomość..." style="width: 99%; padding: 12px 54px 12px 18px; border: 1px solid rgba(0,0,0,0.1); background: rgb(168 168 168 / 10%); border-radius: 24px; height: 46px; box-sizing: border-box; font-size: 14px; outline: none; transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;">
+            <span id="chatCharCounter" style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #a0a0a0; pointer-events: none;">0/500</span>
+        </div>
+        <div id="chatSpinner" class="ipsHide" style="margin-right: 5px;">
+            <i class="fa fa-spinner fa-spin" style="font-size: 22px; color: var(--theme-primary, #007bff);"></i>
+        </div>
+       
+        <button type="button" id="elChatKlipyButton" style="padding: 0 14px; cursor: pointer; background: transparent; border: none; border-radius: 24px; height: 46px; font-weight: bold; color: #65676b; font-size: 13px; transition: background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'"><i class="fa-solid fa-film"></i></button>
+       
+        <button type="button" id="elChatEmojiButton" style="padding: 0 12px; cursor: pointer; background: transparent; border: none; border-radius: 24px; height: 46px; font-size: 20px; transition: background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.05)'" onmouseout="this.style.background='transparent'">😀</button>
+        
+        <button type="button" id="chatSendBtn" style="padding: 0 24px; cursor: pointer; color: #fff; border: none; border-radius: 24px; height: 46px; font-weight: 600; font-size: 14px; transition: transform 0.1s, background 0.2s;" class="ipsResponsive_hidePhone" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'"><i class="fa-solid fa-paper-plane"></i></button>
+       
+        <!-- Menu Emoji -->
+        <div id="elChatEmojiMenu" class="ipsHide" style="position: absolute; bottom: 60px; right: 0; width: 280px; max-height: 220px; overflow-y: auto; background: var(--i-dropdown--ba-co); border: 1px solid rgba(0,0,0,0.06); padding: 12px; z-index: 9999; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);">
+            <div id="chatEmojiContainer" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; font-size: 22px; text-align: center;"></div>
+        </div>
+
+        <!-- Menu Klipy (GIF) -->
+        <div id="elChatKlipyMenu" class="ipsHide" style="position: absolute; bottom: 60px; right: 0; width: 320px; max-height: 350px; background: var(--i-dropdown--ba-co); border: 1px solid rgba(0,0,0,0.06); padding: 12px; z-index: 9999; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); flex-direction: column; gap: 10px;">
+            <input type="text" id="chatKlipySearch" placeholder="Szukaj GIFów z Klipy..." autocomplete="off" style="width: 100%; padding: 10px 14px; border: 1px solid rgba(0,0,0,0.08); background: #f0f2f5; border-radius: 20px; box-sizing: border-box; font-size: 13px; outline: none;">
+            <div id="chatKlipyContainer" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; overflow-y: auto; max-height: 270px; align-items: start; margin-top: 8px;"></div>
+        </div>
+    </div>
+<ul id="chatBanMentionDropdown" style="display: none; position: fixed; z-index: 99999; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; max-height: 250px; overflow-y: auto; list-style: none; padding: 6px 0; margin: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.6);"></ul>
+</div>
+{{else}}
+    <div style="text-align: center; padding: 40px; color: #888; font-size: 16px;">
+        <i class="fa fa-lock" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+        Nie masz uprawnień do korzystania z czatu.
+    </div>
+{{endif}}
+{{else}}
+    <div style="text-align:center;padding:40px;">
+        <i class="fa fa-lock" style="font-size:48px;color:#888;"></i>
+        <p style="margin-top:16px;color:#888;">Zaloguj się, aby korzystać z czatu.</p>
+    </div>
+{{endif}}
+]]></template>
+ <css css_location="front" css_app="tkchat" css_attributes="" css_path="." css_name="front_tkchat.css"><![CDATA[@keyframes tkChatFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes chatPanelIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.tk-panel-menu-item.active {
+    color: #fff !important;
+    background: rgba(255,255,255,0.06);
+    border-left-color: var(--i-primary, #007bff) !important;
+}
+
+.tk-panel-menu-item:hover {
+    background: rgba(255,255,255,0.04);
+    color: #fff !important;
+}
+.tk-chat-settings {
+    position: relative;
+}
+
+.tk-chat-settings-btn {
+    cursor: pointer;
+    font-size: 15px;
+    color: #888;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.tk-chat-settings-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.tk-msg-fade-in { animation: tkChatFadeIn 0.25s ease-out forwards; }
+
+/* STABILNE I NOWOCZESNE DYMKI CZATU */
+.tk-msg-item { 
+    position: relative;
+    display: flex !important;
+    flex-direction: column !important;
+    background: rgb(94 94 94 / 15%);
+    border-radius: 18px;
+    padding: 12px 40px 12px 16px;
+    margin-bottom: 15px;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s ease;
+    line-height: 1.45;
+    font-size: 14px;
+    color: var(--i-text-color, #1c1e21);
+    word-break: break-word;
+    border: 1px solid rgb(214 214 214 / 7%);
+}
+.tk-msg-item:last-child {
+    margin-bottom: 0;
+}
+.tk-msg-item:hover { 
+    background: rgb(216 216 216 / 7%); 
+}
+
+.tk-msg-item img {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.tk-reply-quote {
+    background: var(--i-background-3, rgba(0,0,0,0.05));
+    border-left: 3px solid var(--i-primary, #007bff);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--i-text-light, #65676b);
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#chatMessageWindow::-webkit-scrollbar { width: 6px; }
+#chatMessageWindow::-webkit-scrollbar-track { background: transparent; }
+#chatMessageWindow::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 10px; }
+#chatMessageWindow::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.4); }
+
+/* Przyciski akcji wiadomości */
+.tk-msg-actions {
+    position: absolute;
+    right: 30px;
+    top: 8px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 10;
+}
+
+.tk-msg-item:hover .tk-msg-actions {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tk-action-btn {
+background-color: hsl(0deg 0% 24.25% / 82%);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    width: 28px;
+    height: 26px;
+    padding: 0;
+    font-size: 11px;
+    cursor: pointer;
+    color: rgb(255 255 255 / 81%);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.tk-action-btn i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 11px;
+}
+
+.tk-action-btn:hover {
+    background: rgb(73 73 73 / 90%);
+    color: #fff;
+    border-color: rgba(255,255,255,0.25);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+    border-radius: 12px;
+}
+
+.tk-action-btn.tk-edit-btn:hover {
+    background: rgb(73 73 73 / 90%);
+    color: #fff;
+    border-color: rgba(255,255,255,0.35);
+}
+
+.tk-action-btn.tk-delete-btn:hover {
+    background: rgba(255,80,80,0.25);
+    color: #ff6b6b;
+    border-color: rgba(255,80,80,0.4);
+}
+
+/* Przycisk odpowiedzi */
+.tk-reply-btn { 
+    position: absolute; 
+    right: -14px; 
+    top: 50%; 
+    transform: translateY(-50%) scale(0.8); 
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12); 
+    border-radius: 12px;
+    width: 34px;
+    height: 30px;
+    padding: 0;
+    font-size: 13px; 
+    cursor: pointer; 
+    color: rgba(255,255,255,0.7);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+    z-index: 10;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.tk-reply-btn i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 13px;
+}
+
+.tk-msg-item:hover .tk-reply-btn { 
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(-50%) scale(1); 
+}
+
+.tk-reply-btn:hover { 
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-50%) scale(1.1); 
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+    border-radius: 14px;
+}
+
+/* Styl edycji wiadomości */
+.tk-edit-container {
+    display: none;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.tk-edit-container.active {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tk-edit-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--i-primary, #007bff);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 40px;
+    outline: none;
+    box-sizing: border-box;
+    background: var(--i-background-1, #fff);
+    color: var(--i-text-color, #333);
+}
+
+.tk-edit-input:focus {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+}
+
+.tk-edit-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.tk-edit-save-btn, .tk-edit-cancel-btn {
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.tk-edit-save-btn {
+    background: var(--i-primary, #007bff);
+    color: #fff;
+    border-color: var(--i-primary, #007bff);
+}
+
+.tk-edit-save-btn:hover {
+    opacity: 0.9;
+}
+
+.tk-edit-cancel-btn {
+    background: var(--i-background-3, #f0f0f0);
+    color: var(--i-text-light, #666);
+    border-color: rgba(128,128,128,0.2);
+}
+
+.tk-edit-cancel-btn:hover {
+    background: var(--i-background-2, #e0e0e0);
+}
+
+.tk-edited-badge {
+    font-size: 10px;
+    color: var(--i-text-light, #888);
+    font-style: italic;
+    margin-left: 6px;
+}
+
+.tk-mention-highlight,
+.tk-msg-item.tk-reply-to-me {
+    padding-left: 12px !important;
+    position: relative;
+    box-shadow: -2px 0 8px rgba(241,196,15,0.2), inset 0 0 0 1px rgba(241,196,15,0.1);
+}
+
+.tk-mention-highlight .tk-msg-content::before,
+.tk-msg-item.tk-reply-to-me .tk-msg-content::before {
+    content: '@';
+    font-size: 40px;
+    font-weight: 900;
+    color: rgba(241,196,15,0.06);
+    position: absolute;
+    right: 10px;
+    bottom: -5px;
+    pointer-events: none;
+    z-index: 0;
+}
+.tk-msg-item.tk-reply-to-me .tk-msg-content::before {
+    content: '"' !important;
+}
+
+.tk-mention-highlight .tk-msg-content::after,
+.tk-msg-item.tk-reply-to-me .tk-msg-content::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 6px;
+    height: 6px;
+    background: #f1c40f;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #f1c40f, 0 0 20px rgba(241,196,15,0.5);
+    pointer-events: none;
+    z-index: 1;
+    animation: glowDot 2s ease-in-out infinite;
+}
+#chatSendBtn {
+    background: linear-gradient(135deg, rgba(128,128,128,0.12), rgba(128,128,128,0.05)) !important;
+    color: var(--i-text-light, #999) !important;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+#chatSendBtn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), transparent 60%);
+    pointer-events: none;
+}
+
+#chatSendBtn:hover {
+    transform: scale(1.1);
+    border-color: rgba(255,255,255,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
+    background: linear-gradient(135deg, rgba(128,128,128,0.2), rgba(128,128,128,0.1)) !important;
+    color: #fff !important;
+}
+
+#chatSendBtn:hover i {
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+#chatSendBtn:active {
+    transform: scale(0.9);
+    transition: all 0.1s ease;
+}
+/* Menu wzmianek */
+.tk-mention-dropdown { 
+    position: absolute; bottom: 60px; left: 0; 
+    background: var(--i-dropdown--ba-co) !important; 
+    border: 1px solid var(--i-border-color, rgba(128,128,128,0.1)) !important; 
+    border-radius: 12px !important; width: 220px !important; 
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important; 
+    z-index: 9999 !important; list-style: none !important; 
+    padding: 6px !important; 
+    margin: 0 !important; 
+    display: block; 
+    overflow: hidden; 
+}
+
+.tk-mention-dropdown li { 
+    padding: 10px 16px !important; cursor: pointer !important; 
+    font-size: 13px !important; 
+    color: var(--i-text-color, #333) !important; 
+    background: transparent !important; 
+    list-style-type: none !important; 
+    transition: background 0.15s ease; 
+}
+
+.tk-mention-dropdown li:hover, .tk-mention-dropdown li.active { 
+    
+    color: #fff !important; 
+}
+
+.tk-send-error { 
+    color: #e74c3c; font-size: 12px; padding: 10px 14px; 
+    display: none; background: rgba(231, 76, 60, 0.1); 
+    border-radius: 8px; margin-bottom: 10px; font-weight: 500; 
+    border-left: 3px solid #e74c3c; 
+}
+
+.tk-clickable { cursor: pointer; }
+
+/* Kontener czatu */
+#tkChatContainer {
+    background: var(--i-widget--ba-co) !important;
+
+    color: var(--i-text-color, #333) !important;
+}
+
+/* Okno wiadomości */
+#chatMessageWindow {
+    background: var(--i-widget--ba-co) !important;
+    border-bottom: 1px solid var(--i-border-color, rgba(128,128,128,0.1)) !important;
+    border-radius: 12px;
+}
+.tk-msg-text {
+    color: #d2d2d2;
+}
+/* Input czatu */
+#chatInputField {
+    background: var(--i-widget--ba-co) !important;
+    color: var(--i-color_soft) !important;
+    border: 1px solid var(--i-border-color, rgba(128,128,128,0.2)) !important;
+    border-radius: 24px;
+    padding: 12px 54px 12px 18px;
+}
+.tkchat--onlinecount {
+    display: flex;
+    gap: 3px;
+        align-items: center;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgb(210 210 210 / 87%);
+}
+.tk-action-btn .ipsTooltip,
+.tk-reply-btn .ipsTooltip {
+    left: auto !important;
+    right: 0 !important;
+    transform: translateX(0) !important;
+}
+
+.tk-action-btn .ipsTooltip::after,
+.tk-reply-btn .ipsTooltip::after {
+    left: auto !important;
+    right: 15px !important;
+}
+.tkliveactivity-dot {
+    width: 7px;
+    height: 7px;
+     margin-right: 4px;
+    border-radius: 50%;
+    background: var(--i-color-positive, #22c55e);
+    box-shadow: 0 0 8px var(--i-color-positive, #22c55e);
+    animation: ipw-blink 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    
+}
+@keyframes ipw-blink {
+    0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+}
+}
+#chatInputField:focus {
+    background: var(--i-widget--ba-co) !important;
+    border-color: var(--i-primary, #007bff) !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+#chatInputField::placeholder {
+    color: var(--i-text-light, #999);
+}
+
+/* Przyciski w input area */
+#elChatKlipyButton, #elChatEmojiButton {
+    color: #b5b5b5 !important;
+    border-radius: 24px;
+    transition: background 0.2s;
+}
+
+#elChatKlipyButton:hover, #elChatEmojiButton:hover {
+    background: var(--i-background-3, rgba(128,128,128,0.1)) !important;
+}
+
+#chatSendBtn {
+
+    border-radius: 24px;
+    font-weight: 600;
+}
+
+/* Menu emoji i klipy */
+#elChatEmojiMenu, #elChatKlipyMenu {
+    background: var(--i-dropdown--ba-co) !important;
+    border: 1px solid var(--i-border-color, rgba(128,128,128,0.1)) !important;
+    border-radius: var(--i-dropdown--bo-ra);
+    box-shadow: var(--i-dropdown--bo-sh);
+}
+
+#chatKlipySearch {
+    background: var(--i-widget--ba-co) !important;
+    color: var(--i-color_soft) !important;
+    border: 1px solid var(--i-border-color, rgba(128, 128, 128, 0.2)) !important;;
+    border-radius: 20px;
+}
+
+/* Loader */
+#initialLoader {
+    color: var(--i-text-light, #777) !important;
+}
+.tk-msg-time::before {
+    content: '· ';
+    color: #888;
+}
+/* Animacja pisania - migające kropki */
+#chatTypingIndicator {
+    position: absolute;
+    bottom: 80px;
+    left: 30px;
+    font-size: 11px;
+    color: var(--i-text-light, #888);
+    font-style: italic;
+    background: rgba(0,0,0,0.6);
+    padding: 4px 10px;
+    border-radius: 12px;
+    z-index: 5;
+    pointer-events: none;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    animation: typingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes typingPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+/* Połącz w jedno: */
+#chatMessageWindow {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128,128,128,0.2) transparent;
+}
+
+/* Ostrzeżenie o stracie połączenia */
+#chatReconnect {
+    animation: pulseWarning 2s ease-in-out infinite;
+}
+
+@keyframes pulseWarning {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,193,7,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(255,193,7,0); }
+}
+/* 4. Subtelna linia oddzielająca dzień */
+.tk-msg-date-separator {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(128,128,128,0.6);
+    margin: 15px 0;
+    position: relative;
+}
+
+.tk-msg-date-separator::before,
+.tk-msg-date-separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: rgba(128,128,128,0.15);
+}
+#chatMessageWindow::after {
+    content: '';
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(transparent, var(--i-widget--ba-co, #fff));
+    pointer-events: none;
+}
+/* Load more button */
+#chatLoadMoreBtn {
+    background: rgba(128,128,128,0.15) !important;
+    color: var(--i-text-light, #999) !important;
+    border: 1px solid rgba(128,128,128,0.15) !important;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+#chatLoadMoreBtn:hover {
+    background: rgba(128,128,128,0.25) !important;
+    color: var(--i-text-color, #fff) !important;
+    border-color: rgba(128,128,128,0.3) !important;
+}
+
+/* Guest notice */
+#chatGuestNotice {
+    background: var(--i-background-2, #f8f9fa) !important;
+    color: var(--i-text-light, #555) !important;
+    border: 1px dashed var(--i-border-color, rgba(128,128,128,0.15)) !important;
+    border-radius: 12px;
+}
+.tkmsg-replymsg {
+    font-size: 11px;
+    color: #bbb;
+    background: rgba(241,196,15,0.06);
+    padding: 8px 14px;
+    margin-left: 42px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(241,196,15,0.2);
+    border-radius: 12px;
+    max-width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(241,196,15,0.08), inset 0 0 20px rgba(241,196,15,0.02);
+}
+
+.tkmsg-replymsg i {
+    color: #f1c40f;
+    font-size: 10px;
+    background: rgba(241,196,15,0.15);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tkmsg-replymsg strong {
+    color: #d5d5d5;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.tkmsg-replymsg em {
+    color: #aaa;
+    font-style: normal;
+}
+/* Reply preview bar */
+#chatReplyPreviewBar {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: rgba(128,128,128,0.06);
+    border: 1px solid rgba(128,128,128,0.1);
+    border-left: 3px solid #f1c40f;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    animation: replySlideDown 0.2s ease-out;
+}
+
+#chatReplyPreviewBar span:first-child {
+    font-size: 10px;
+    font-weight: 700;
+    color: #f1c40f;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+#chatReplyPreviewText {
+    color: var(--i-text-color, #bbb);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+#chatCancelReplyBtn {
+    cursor: pointer;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 5px;
+    font-size: 10px;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+#chatCancelReplyBtn:hover {
+    background: rgba(255,80,80,0.2);
+    color: #ff6b6b;
+    border-color: rgba(255,80,80,0.3);
+}
+
+@keyframes replySlideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Char counter */
+#chatCharCounter {
+    color: var(--i-text-light, #a0a0a0) !important;
+}
+
+/* New message alert */
+#chatNewMessageAlert {
+    background: var(--i-primary, #007bff) !important;
+    color: #fff !important;
+    border-radius: 24px;
+}
+
+.tkchat--others {
+padding: 0px 15px 15px 15px;
+}
+
+#chatInputArea {
+display: flex;
+    padding: 0px 15px 15px 15px;
+}
+#chatMessageWindow.is-inactive {
+    filter: blur(5px);
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+@keyframes glowDot {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.5); }
+}
+.tk-typing-name {
+    color: var(--i-text-color, #ccc);
+    font-weight: 500;
+}
+
+.tk-typing-dots span {
+    display: inline-block;
+    animation: typingDot 1.4s infinite;
+    opacity: 0;
+    font-weight: bold;
+}
+
+.tk-typing-dots span:nth-child(1) { animation-delay: 0s; }
+.tk-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.tk-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingDot {
+    0%, 60%, 100% { opacity: 0; }
+    30% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+    #chatSettingsPanel > div:last-child {
+        flex-direction: row !important;
+        width: 95vw !important;
+        max-width: 95vw !important;
+        max-height: 85vh !important;
+        border-radius: 14px !important;
+    }
+    
+    #chatSettingsPanel > div:last-child > div:first-child {
+        width: 160px !important;
+        min-width: 160px !important;
+        padding: 12px 0 !important;
+    }
+    
+    .tk-panel-menu-item {
+        padding: 8px 12px !important;
+        font-size: 12px !important;
+    }
+    
+    #chatSettingsPanel > div:last-child > div:last-child {
+        padding: 14px !important;
+    }
+    
+    #chatSettingsPanel input,
+    #chatSettingsPanel select {
+        font-size: 16px !important;
+    }
+}
+#chatBanDuration > option {
+    color: #000;
+}
+
+.tkchat-rules {
+        display: revert;
+    list-style: revert;
+    margin: revert;
+    padding: 0;
+    position: relative;
+    inset-inline-start: 2em;
+    max-width: calc(100% - 2em);
+}]]></css>
+</theme>

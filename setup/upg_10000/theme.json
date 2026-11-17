@@ -1,0 +1,23 @@
+{
+    "html": {
+        "added": [
+            "front\/widget\/chatContainer",
+            "front\/widget\/ChatWidget",
+            "front\/widgets\/ChatWidget"
+        ],
+        "edited": [],
+        "removed": []
+    },
+    "css": {
+        "added": [
+            "front\/front_tkchat.css"
+        ],
+        "edited": [],
+        "removed": []
+    },
+    "resources": {
+        "added": [],
+        "edited": [],
+        "removed": []
+    }
+}

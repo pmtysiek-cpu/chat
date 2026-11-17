@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+ <app key="tkchat" version="10014">
+  <word key="__app_tkchat" js="0">(TK) Chat</word>
+  <word key="__app_tkchat_description" js="0">Czat społecznościowy w czasie rzeczywistym</word>
+  <word key="menu__tkchat_settings" js="0">Ustawienia</word>
+  <word key="menu__tkchat_settings_chat" js="0">Czat</word>
+  <word key="perm__tkchat_use" js="0">Korzystanie z czatu</word>
+  <word key="perm__tkchat_moderate" js="0">Moderowanie czatu</word>
+  <word key="perm__tkchat_edit" js="0">Edytowanie wszystkich wiadomości</word>
+  <word key="perm__tkchat_delete" js="0">Usuwanie wszystkich wiadomości</word>
+  <word key="tkchat_settings_title" js="0">Ustawienia Czatu</word>
+  <word key="tkchat_header_access" js="0">Uprawnienia dostępu</word>
+  <word key="tkchat_access_info" js="0">Wybierz grupy, które mogą wysyłać wiadomości na czacie. Pozostaw puste aby wszystkie grupy miały dostęp.</word>
+  <word key="tkchat_chat_groups" js="0">Grupy mogące korzystać z czatu</word>
+  <word key="tkchat_header_moderation" js="0">Uprawnienia moderacyjne</word>
+  <word key="tkchat_moderation_info" js="0">Grupy z poniższymi uprawnieniami mogą edytować/usuwać WSZYSTKIE wiadomości.</word>
+  <word key="tkchat_moderate_groups" js="0">Pełni moderatorzy czatu</word>
+  <word key="tkchat_edit_groups" js="0">Grupy mogące edytować cudze wiadomości</word>
+  <word key="tkchat_delete_groups" js="0">Grupy mogące usuwać cudze wiadomości</word>
+  <word key="tkchat_header_own_messages" js="0">Edycja własnych wiadomości</word>
+  <word key="tkchat_own_messages_info" js="0">Grupy, które mogą edytować swoje własne wiadomości (w ramach limitu czasowego).</word>
+  <word key="tkchat_edit_own_groups" js="0">Grupy mogące edytować własne wiadomości</word>
+  <word key="tkchat_header_highlight" js="0">Wyróżnienie wiadomości</word>
+  <word key="tkchat_highlight_info" js="0">Wiadomości użytkowników z wybranych grup będą wyróżnione.</word>
+  <word key="tkchat_highlight_groups" js="0">Grupy z wyróżnionymi wiadomościami</word>
+  <word key="tkchat_highlight_color" js="0">Kolor wyróżnienia</word>
+  <word key="tkchat_header_general" js="0">Ustawienia ogólne</word>
+  <word key="tkchat_max_message_length" js="0">Maksymalna długość wiadomości</word>
+  <word key="tkchat_antispam_time" js="0">Odstęp między wiadomościami</word>
+  <word key="tkchat_edit_time_limit" js="0">Limit czasu edycji własnych wiadomości</word>
+  <word key="tkchat_polling_interval" js="0">Interwał odświeżania czatu</word>
+  <word key="tkchat_header_klipy" js="0">API Klipy (GIFy)</word>
+  <word key="tkchat_klipy_endpoint" js="0">Endpoint API Klipy</word>
+  <word key="tkchat_klipy_key" js="0">Klucz API Klipy</word>
+  <word key="tkchat_all_groups" js="0">Wszystkie grupy</word>
+  <word key="tkchat_none" js="0">Brak</word>
+  <word key="tkchat_seconds" js="0">sekund</word>
+  <word key="tkchat_milliseconds" js="0">milisekund</word>
+  <word key="tkchat_no_limit" js="0">Bez limitu</word>
+  <word key="tkchat_beta" js="0">BETA</word>
+  <word key="acplogs__tkchat_settings_updated" js="0">Zaktualizowano ustawienia czatu</word>
+ </app>
+</language>

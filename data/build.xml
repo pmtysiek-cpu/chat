@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build>
+ <module key="front/tkchat"><![CDATA[{"default_controller":"messages","protected":0,"default":1}]]></module>
+ <module key="admin/settings"><![CDATA[{"default_controller":"chat","protected":0,"default":1}]]></module>
+ <setting key="tkchat_antispam_time"><![CDATA[{"key":"tkchat_antispam_time","default":"2"}]]></setting>
+ <setting key="tkchat_chat_groups"><![CDATA[{"key":"tkchat_chat_groups","default":""}]]></setting>
+ <setting key="tkchat_delete_groups"><![CDATA[{"key":"tkchat_delete_groups","default":""}]]></setting>
+ <setting key="tkchat_edit_groups"><![CDATA[{"key":"tkchat_edit_groups","default":""}]]></setting>
+ <setting key="tkchat_edit_own_groups"><![CDATA[{"key":"tkchat_edit_own_groups","default":""}]]></setting>
+ <setting key="tkchat_edit_time_limit"><![CDATA[{"key":"tkchat_edit_time_limit","default":"300"}]]></setting>
+ <setting key="tkchat_highlight_groups"><![CDATA[{"key":"tkchat_highlight_groups","default":""}]]></setting>
+ <setting key="tkchat_klipy_endpoint"><![CDATA[{"key":"tkchat_klipy_endpoint","default":"https:\/\/api.klipy.com\/v2"}]]></setting>
+ <setting key="tkchat_klipy_key"><![CDATA[{"key":"tkchat_klipy_key","default":"VGLwuhYEXx5LUDNOj1Dat5OQs5Vi1sk8KwJQqa927QLpjcWo5SpXcjtVY6zhRUCE"}]]></setting>
+ <setting key="tkchat_max_message_length"><![CDATA[{"key":"tkchat_max_message_length","default":"500"}]]></setting>
+ <setting key="tkchat_moderate_groups"><![CDATA[{"key":"tkchat_moderate_groups","default":""}]]></setting>
+ <setting key="tkchat_polling_interval"><![CDATA[{"key":"tkchat_polling_interval","default":"3000"}]]></setting>
+ <widget key="ChatWidget"><![CDATA[{"class":"\\IPS\\Widget","restrict":["sidebar","cms"],"allow_reuse":false,"menu_style":"menu","layouts":"","embeddable":false,"padding":false,"default_layout":null,"searchterms":""}]]></widget>
+</build>

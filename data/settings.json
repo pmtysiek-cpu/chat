@@ -1,0 +1,50 @@
+[
+    {
+        "key": "tkchat_antispam_time",
+        "default": "2"
+    },
+    {
+        "key": "tkchat_chat_groups",
+        "default": ""
+    },
+    {
+        "key": "tkchat_delete_groups",
+        "default": ""
+    },
+    {
+        "key": "tkchat_edit_groups",
+        "default": ""
+    },
+    {
+        "key": "tkchat_edit_own_groups",
+        "default": ""
+    },
+    {
+        "key": "tkchat_edit_time_limit",
+        "default": "300"
+    },
+    {
+        "key": "tkchat_highlight_groups",
+        "default": ""
+    },
+    {
+        "key": "tkchat_klipy_endpoint",
+        "default": "https:\/\/api.klipy.com\/v2"
+    },
+    {
+        "key": "tkchat_klipy_key",
+        "default": "VGLwuhYEXx5LUDNOj1Dat5OQs5Vi1sk8KwJQqa927QLpjcWo5SpXcjtVY6zhRUCE"
+    },
+    {
+        "key": "tkchat_max_message_length",
+        "default": "500"
+    },
+    {
+        "key": "tkchat_moderate_groups",
+        "default": ""
+    },
+    {
+        "key": "tkchat_polling_interval",
+        "default": "3000"
+    }
+]

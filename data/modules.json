@@ -1,0 +1,16 @@
+{
+    "front": {
+        "tkchat": {
+            "default_controller": "messages",
+            "protected": 0,
+            "default": 1
+        }
+    },
+    "admin": {
+        "settings": {
+            "default_controller": "chat",
+            "protected": 0,
+            "default": 1
+        }
+    }
+}

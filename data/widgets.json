@@ -1,0 +1,16 @@
+{
+    "ChatWidget": {
+        "class": "\\IPS\\Widget",
+        "restrict": [
+            "sidebar",
+            "cms"
+        ],
+        "allow_reuse": false,
+        "menu_style": "menu",
+        "layouts": "",
+        "embeddable": false,
+        "padding": false,
+        "default_layout": null,
+        "searchterms": ""
+    }
+}

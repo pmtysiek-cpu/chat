@@ -1,0 +1,7 @@
+{
+    "core": {
+        "Loader": {
+            "tkchat": "IPS\\tkchat\\extensions\\core\\Loader\\tkchat"
+        }
+    }
+}
